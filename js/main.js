@@ -1,7 +1,7 @@
 const MARKERS = {
     '0': null,
     '1': 'X',
-    '-1': 'O',
+    '-1': 'COMPUTER',
 }
 const WINCOUNT = {
     '1': 0,
@@ -12,7 +12,6 @@ let board
 let turn
 let winner
 let tieGame
-let marked
 let numRows = 3
 let numCols = 3
 
@@ -31,15 +30,16 @@ playAgainBtn.addEventListener('click', () => {
 init()
 
 function init() {
-board = [
-    [0, 0, 0],  // col 0
-    [0, 0, 0],  // col 1
-    [0, 0, 0],  // col 2
-]
-turn = 1
-winner = null
-render()
-renderEls()
+    console.log(MARKERS[winner])
+    board = [
+        [0, 0, 0],  // col 0
+        [0, 0, 0],  // col 1
+        [0, 0, 0],  // col 2
+    ]
+    turn = 1
+    winner = null
+    render()
+    renderEls()
 }
 
 function inputMarker(e) {
@@ -52,10 +52,32 @@ function inputMarker(e) {
     checkWin(colIdx, rowIdx)
     render()
     cellElement.classList.remove('cell-hover')
+    setTimeout(computerMove, 450)
+}
+
+function computerMove() {
+    if (!winner && turn === -1) {
+        for (let colIdx = 0; colIdx < numCols; colIdx++) {
+            for (let rowIdx = 0; rowIdx < numRows; rowIdx++) {
+                if (board[colIdx][rowIdx] === 0) {
+                    board[colIdx][rowIdx] = -1
+                    turn *= -1
+                    tieGame = catsGame()
+                    checkWin(colIdx, rowIdx)
+                    render()
+                    const cellElement = document.getElementById(`c${colIdx}r${rowIdx}`)
+                    cellElement.classList.remove('cell-hover')
+                    return
+                }
+            }
+        }
+    }
 }
 
 function checkWin(colIdx, rowIdx) {
-    if (checkVerticalWin(colIdx, rowIdx) || checkHorizontalWin(colIdx, rowIdx) || checkDiagonalWin(colIdx, rowIdx)) {
+    if (checkVerticalWin(colIdx, rowIdx) 
+    || checkHorizontalWin(colIdx, rowIdx) 
+    || checkDiagonalWin(colIdx, rowIdx)) {
         winner = board[colIdx][rowIdx]
         if (winner !== null) {
             WINCOUNT[winner]++ 
@@ -92,8 +114,12 @@ function checkHorizontalWin(colIdx, rowIdx) {
 
 function checkDiagonalWin(colIdx, rowIdx) {
     const player = board[colIdx][rowIdx]
-    if (board[0][0] === player && board[1][1] === player && board[2][2] === player) return true
-    if (board[0][2] === player && board[1][1] === player && board[2][0] === player) return true
+    if (board[0][0] === player 
+        && board[1][1] === player 
+        && board[2][2] === player) return true
+    if (board[0][2] === player 
+        && board[1][1] === player 
+        && board[2][0] === player) return true
     return false
 }
 
@@ -123,7 +149,7 @@ function renderMessage() {
 }
 
 function renderEls() {
-    messageEl.innerHTML = "X'S TURN"
+    messageEl.innerHTML = "X's Turn"
     cellEls.forEach(cell => {
         cell.classList.add('cell-hover')
     })
@@ -138,7 +164,7 @@ cellEls.forEach(cell => {
         } else if (turn === -1 
             && cell.classList.contains('cell-hover') 
             && !winner) {
-            cell.innerHTML = '🙆‍♂️'
+            cell.innerHTML = ''
         } 
     })
 
@@ -148,14 +174,6 @@ cellEls.forEach(cell => {
             && cell.classList.contains('cell-hover') 
             && !winner) {
             cell.innerHTML = ''
-        } else if (turn === -1 
-            && cell.innerHTML === '🙆‍♂️' 
-            && cell.classList.contains('cell-hover') 
-            && !winner) {
-            cell.innerHTML = ''
         }
     })
 })
-
-
-
