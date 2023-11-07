@@ -52,7 +52,7 @@ function inputMarker(e) {
     checkWin(colIdx, rowIdx)
     render()
     cellElement.classList.remove('cell-hover')
-    setTimeout(computerMove, 450)
+    setTimeout(computerMove, 500)
 }
 
 function computerMove() {
@@ -86,9 +86,9 @@ function checkWin(colIdx, rowIdx) {
 }
 
 function catsGame() {
-    for (let i = 0; i < numCols; i++) {
-        for (let j = 0; j < numRows; j++) {
-            if (board[i][j] === 0) {
+    for (let colIdx = 0; colIdx < numCols; colIdx++) {
+        for (let rowIdx = 0; rowIdx < numRows; rowIdx++) {
+            if (board[colIdx][rowIdx] === 0) {
                 return false
             }
         }
